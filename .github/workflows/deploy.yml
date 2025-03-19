@@ -1,0 +1,43 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js 🔧
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies 📦
+        run: npm ci
+
+      - name: Build 🏗️
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      # If deploying to GitHub Pages, uncomment the following:
+      # - name: Deploy to GitHub Pages 🚀
+      #   uses: JamesIves/github-pages-deploy-action@v4
+      #   with:
+      #     branch: gh-pages
+      #     folder: dist
+
+      # For a Node.js app, you might want to set up additional steps for deploying to services like Heroku, Vercel, etc.
+      # Example for Heroku:
+      # - name: Deploy to Heroku
+      #   uses: akhileshns/heroku-deploy@v3.12.14
+      #   with:
+      #     heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+      #     heroku_app_name: "your-app-name"
+      #     heroku_email: ${{ secrets.HEROKU_EMAIL }}
